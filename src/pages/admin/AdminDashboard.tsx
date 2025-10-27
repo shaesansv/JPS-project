@@ -124,7 +124,7 @@ const AdminDashboard = () => {
               <CardDescription>Frequently used actions</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Link to="/admin/properties/new">
+              <Link to="./admin/properties">
                 <Button className="w-full justify-start" variant="outline">
                   <Plus className="mr-2 h-4 w-4" />
                   Add New Property

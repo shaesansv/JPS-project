@@ -1,10 +1,17 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Building2, Lock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
@@ -13,39 +20,20 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      // Replace with actual API call to your backend
-      // const response = await fetch('/api/admin/auth/login', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ email, password }),
-      // });
-
-      // Mock authentication for demo
-      if (email === "admin@eliteestates.com" && password === "admin123") {
-        localStorage.setItem("adminToken", "mock-token-123");
-        toast({
-          title: "Login Successful",
-          description: "Welcome back to the admin dashboard!",
-        });
-        navigate("/admin/dashboard");
-      } else {
-        toast({
-          variant: "destructive",
-          title: "Login Failed",
-          description: "Invalid email or password. Try admin@eliteestates.com / admin123",
-        });
-      }
+      // Call real login via auth context which uses the API
+      await login(email, password);
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error",
-        description: "Something went wrong. Please try again.",
+        title: "Login Failed",
+        description: error?.message || "Invalid credentials",
       });
     } finally {
       setIsLoading(false);
@@ -73,7 +61,7 @@ const AdminLogin = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="admin@eliteestates.com"
+                  placeholder="admin@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
@@ -107,8 +95,10 @@ const AdminLogin = () => {
             </Button>
 
             <div className="text-xs text-center text-muted-foreground mt-4 p-3 bg-muted rounded">
-              Demo credentials:<br />
-              Email: admin@eliteestates.com<br />
+              Demo credentials:
+              <br />
+              Email: admin@example.com
+              <br />
               Password: admin123
             </div>
           </form>

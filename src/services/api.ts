@@ -38,15 +38,75 @@ class ApiService {
     options?: RequestInit
   ): Promise<ApiResponse<T>> {
     try {
-      const response = await fetch(url, options);
+      // Build headers but avoid forcing a Content-Type when sending FormData
+      const includeAuth = !!(
+        options &&
+        (options as any).headers &&
+        (options as any).headers["Authorization"]
+      );
+      const baseHeaders: HeadersInit = this.getHeaders(includeAuth);
+      // If body is FormData, the browser will set the correct Content-Type with boundary
+      const isFormData = options && (options as any).body instanceof FormData;
+      if (isFormData) {
+        // remove Content-Type header so fetch lets the browser set the multipart boundary
+        if ((baseHeaders as any)["Content-Type"])
+          delete (baseHeaders as any)["Content-Type"];
+      }
+
+      const finalOptions: RequestInit = {
+        ...options,
+        mode: "cors",
+        headers: {
+          ...baseHeaders,
+          ...(options?.headers || {}),
+        },
+      };
+
+      console.log(`Fetching ${url}`, {
+        ...finalOptions,
+        body: options?.body ? "(omitted)" : undefined,
+      });
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5s timeout
+
+      const response = await fetch(url, {
+        ...finalOptions,
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({
+          message: `HTTP error! status: ${response.status}`,
+        }));
+        console.error("API Error Response:", errorData);
+        return {
+          success: false,
+          error: errorData,
+        };
+      }
+
       return this.handleResponse<T>(response);
     } catch (error) {
       console.error("API Error:", error);
+      if (error instanceof Error) {
+        if (error.name === "AbortError") {
+          return {
+            success: false,
+            error: {
+              message:
+                "Request timed out. Please check your connection and try again.",
+            },
+          };
+        }
+      }
       return {
         success: false,
         error: {
           message:
-            "Failed to connect to backend. Please ensure the server is running on port 5000.",
+            "Unable to connect to the server. Please ensure the backend is running and try again.",
         },
       };
     }
@@ -56,7 +116,10 @@ class ApiService {
   async login(email: string, password: string) {
     return this.fetchApi(`${API_BASE_URL}/auth/login`, {
       method: "POST",
-      headers: this.getHeaders(),
+      headers: {
+        ...this.getHeaders(),
+        Accept: "application/json",
+      },
       body: JSON.stringify({ email, password }),
     });
   }
@@ -135,19 +198,23 @@ class ApiService {
     return this.fetchApi(`${API_BASE_URL}/properties/${id}`);
   }
 
-  async createProperty(property: any) {
+  async createProperty(property: FormData) {
     return this.fetchApi(`${API_BASE_URL}/properties`, {
       method: "POST",
-      headers: this.getHeaders(true),
-      body: JSON.stringify(property),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+      },
+      body: property,
     });
   }
 
-  async updateProperty(id: string, property: any) {
+  async updateProperty(id: string, property: FormData) {
     return this.fetchApi(`${API_BASE_URL}/properties/${id}`, {
       method: "PUT",
-      headers: this.getHeaders(true),
-      body: JSON.stringify(property),
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+      },
+      body: property,
     });
   }
 

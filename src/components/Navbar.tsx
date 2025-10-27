@@ -27,18 +27,25 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-smooth ${
         isScrolled
-          ? "bg-background/98 backdrop-blur-md shadow-strong border-b border-border"
-          : "bg-gradient-to-b from-background/60 to-transparent backdrop-blur-sm"
+          ? "bg-background/96 backdrop-blur-lg shadow-soft border-b border-border"
+          : "bg-background/80 backdrop-blur-sm"
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <Building2 className="h-8 w-8 text-primary transition-smooth group-hover:scale-110 group-hover:text-accent" />
-            <span className="text-xl md:text-2xl font-bold text-foreground transition-smooth group-hover:text-primary">
-              JP & Siva
-            </span>
+            <div className="flex items-center justify-center h-10 w-10 rounded-full bg-white/90 shadow-soft mr-2">
+              <Building2 className="h-6 w-6 text-primary" />
+            </div>
+            <div>
+              <span className="text-xl md:text-2xl font-extrabold text-foreground transition-smooth">
+                JP & Siva
+              </span>
+              <div className="text-xs text-muted-foreground">
+                Premium Properties
+              </div>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -57,10 +64,7 @@ const Navbar = () => {
               </Link>
             ))}
             <Link to="/admin">
-              <Button
-                size="sm"
-                className="gradient-hero hover-glow transition-smooth hover:scale-105"
-              >
+              <Button size="sm" className="btn-pleasant">
                 Admin Login
               </Button>
             </Link>

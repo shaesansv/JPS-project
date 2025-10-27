@@ -7,9 +7,21 @@ const authMiddleware = require('../middleware/auth');
 // Login
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
+    // Accept either username or email for login (frontend may send email)
+    const { username, email, password } = req.body;
 
-    const user = await AdminUser.findOne({ username });
+    if (!password || (!username && !email)) {
+      return res.status(400).json({
+        success: false,
+        error: { message: 'Username/email and password are required' }
+      });
+    }
+
+    // Find user by username or email
+    let user = null;
+    if (username) user = await AdminUser.findOne({ username });
+    if (!user && email) user = await AdminUser.findOne({ email });
+
     if (!user) {
       return res.status(401).json({ 
         success: false, 

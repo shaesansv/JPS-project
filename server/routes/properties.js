@@ -79,9 +79,19 @@ router.get('/:id', async (req, res) => {
 });
 
 // Create property (Admin only)
-router.post('/', authMiddleware, async (req, res) => {
+const upload = require('../middleware/upload');
+
+// Create property (Admin only)
+router.post('/', authMiddleware, upload.array('photos', 10), async (req, res) => {
   try {
-    const property = new Property(req.body);
+    const propertyData = JSON.parse(JSON.stringify(req.body));
+    
+    // Add uploaded photo paths to the property data
+    if (req.files && req.files.length > 0) {
+      propertyData.photos = req.files.map(file => `/uploads/${file.filename}`);
+    }
+
+    const property = new Property(propertyData);
     await property.save();
     await property.populate('category', 'name slug');
     
@@ -98,11 +108,20 @@ router.post('/', authMiddleware, async (req, res) => {
 });
 
 // Update property (Admin only)
-router.put('/:id', authMiddleware, async (req, res) => {
+router.put('/:id', authMiddleware, upload.array('photos', 10), async (req, res) => {
   try {
+    const propertyData = JSON.parse(JSON.stringify(req.body));
+    
+    // Add uploaded photo paths to the property data if new photos were uploaded
+    if (req.files && req.files.length > 0) {
+      const existingPhotos = propertyData.photos || [];
+      const newPhotos = req.files.map(file => `/uploads/${file.filename}`);
+      propertyData.photos = [...existingPhotos, ...newPhotos];
+    }
+
     const property = await Property.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      propertyData,
       { new: true, runValidators: true }
     ).populate('category', 'name slug');
 

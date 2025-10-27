@@ -1,6 +1,16 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, Bed, Bath, Maximize, Phone, Mail, Send } from "lucide-react";
+import {
+  ArrowLeft,
+  MapPin,
+  Bed,
+  Bath,
+  Maximize,
+  Phone,
+  Mail,
+  Send,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,6 +19,24 @@ import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
+
+interface Property {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  location: string;
+  area: string;
+  dimensions?: string;
+  bedrooms: number;
+  bathrooms: number;
+  photos: string[];
+  category: { _id: string; name: string };
+  featured: boolean;
+  status: string;
+}
 
 const PropertyDetail = () => {
   const { id } = useParams();
@@ -21,47 +49,56 @@ const PropertyDetail = () => {
     message: "",
   });
 
-  // Mock property data - replace with API call
-  const property = {
-    id: 1,
-    title: "Modern Luxury Villa",
-    price: 1250000,
-    location: "Beverly Hills, CA",
-    area: "4500 sq ft",
-    bedrooms: 5,
-    bathrooms: 4,
-    description:
-      "Experience luxury living at its finest in this stunning modern villa. This architectural masterpiece features floor-to-ceiling windows, an open-concept design, and premium finishes throughout. The spacious interior seamlessly flows to a beautifully landscaped outdoor oasis complete with a infinity pool and entertainment area. Located in the prestigious Beverly Hills neighborhood, this property offers both privacy and convenience.",
-    dimensions: "75ft x 60ft",
-    images: [
-      "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=1200&q=80",
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&q=80",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&q=80",
-      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&q=80",
-    ],
-  };
+  // Fetch property data
+  const { data: property, isLoading } = useQuery<Property>({
+    queryKey: ["property", id],
+    queryFn: async () => {
+      const result = await api.getProperty(id!);
+      if (!result.success) throw new Error(result.error?.message);
+      return result.data as Property;
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Here you would make an API call to your backend
-    console.log("Enquiry submitted:", { ...formData, propertyId: id });
-    
-    toast({
-      title: "Enquiry Sent!",
-      description: "We'll contact you shortly via WhatsApp and email.",
-    });
 
-    // Reset form
-    setFormData({
-      name: "",
-      phone: "",
-      email: "",
-      address: "",
-      message: "",
-    });
+    try {
+      const result = await api.createEnquiry({
+        ...formData,
+        property: id,
+      });
+
+      if (result.success) {
+        toast({
+          title: "Enquiry Sent!",
+          description: "We'll contact you shortly via WhatsApp and email.",
+        });
+
+        // Reset form
+        setFormData({
+          name: "",
+          phone: "",
+          email: "",
+          address: "",
+          message: "",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description:
+            result.error?.message ||
+            "Failed to send enquiry. Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send enquiry. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -78,7 +115,10 @@ const PropertyDetail = () => {
       <div className="pt-24 pb-16 px-4">
         <div className="container mx-auto max-w-7xl">
           {/* Back Button */}
-          <Link to="/properties" className="inline-flex items-center mb-6 text-primary hover:underline">
+          <Link
+            to="/properties"
+            className="inline-flex items-center mb-6 text-primary hover:underline"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Properties
           </Link>
@@ -88,22 +128,32 @@ const PropertyDetail = () => {
             <div className="lg:col-span-2">
               {/* Image Gallery */}
               <div className="grid grid-cols-2 gap-4 mb-6 animate-fade-in">
-                <div className="col-span-2">
-                  <img
-                    src={property.images[0]}
-                    alt={property.title}
-                    className="w-full h-96 object-cover rounded-xl shadow-strong"
-                  />
-                </div>
-                {property.images.slice(1).map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`${property.title} ${index + 2}`}
-                    className="w-full h-48 object-cover rounded-lg shadow-medium"
-                    loading="lazy"
-                  />
-                ))}
+                {isLoading ? (
+                  <div className="col-span-2 flex justify-center items-center h-96">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : (
+                  <>
+                    <div className="col-span-2">
+                      <img
+                        src={
+                          property?.photos?.[0] || "/placeholder-property.jpg"
+                        }
+                        alt={property?.title}
+                        className="w-full h-96 object-cover rounded-xl shadow-strong"
+                      />
+                    </div>
+                    {property?.photos?.slice(1).map((img, index) => (
+                      <img
+                        key={index}
+                        src={img}
+                        alt={`${property?.title} ${index + 2}`}
+                        className="w-full h-48 object-cover rounded-lg shadow-medium"
+                        loading="lazy"
+                      />
+                    ))}
+                  </>
+                )}
               </div>
 
               {/* Property Info */}
@@ -123,14 +173,18 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 text-center">
                       <Bed className="h-6 w-6 mx-auto mb-2 text-primary" />
                       <div className="font-semibold">{property.bedrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bedrooms</div>
+                      <div className="text-sm text-muted-foreground">
+                        Bedrooms
+                      </div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
                       <Bath className="h-6 w-6 mx-auto mb-2 text-primary" />
                       <div className="font-semibold">{property.bathrooms}</div>
-                      <div className="text-sm text-muted-foreground">Bathrooms</div>
+                      <div className="text-sm text-muted-foreground">
+                        Bathrooms
+                      </div>
                     </CardContent>
                   </Card>
                   <Card>
@@ -144,14 +198,20 @@ const PropertyDetail = () => {
                     <CardContent className="p-4 text-center">
                       <Maximize className="h-6 w-6 mx-auto mb-2 text-primary" />
                       <div className="font-semibold">{property.dimensions}</div>
-                      <div className="text-sm text-muted-foreground">Dimensions</div>
+                      <div className="text-sm text-muted-foreground">
+                        Dimensions
+                      </div>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="p-4 text-center">
                       <MapPin className="h-6 w-6 mx-auto mb-2 text-primary" />
-                      <div className="font-semibold text-xs">{property.location}</div>
-                      <div className="text-sm text-muted-foreground">Location</div>
+                      <div className="font-semibold text-xs">
+                        {property.location}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        Location
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -233,7 +293,10 @@ const PropertyDetail = () => {
                       />
                     </div>
 
-                    <Button type="submit" className="w-full gradient-hero group">
+                    <Button
+                      type="submit"
+                      className="w-full gradient-hero group"
+                    >
                       Send Enquiry
                       <Send className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-smooth" />
                     </Button>

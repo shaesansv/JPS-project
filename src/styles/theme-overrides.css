@@ -1,0 +1,52 @@
+/* Small theme overrides for a pleasant user-facing theme */
+:root {
+  --pleasant-bg: linear-gradient(
+    180deg,
+    rgba(245, 248, 255, 0.6),
+    rgba(240, 249, 245, 0.6)
+  );
+}
+
+/* subtle page overlay to add depth */
+.page-pleasant {
+  background-image: radial-gradient(
+      rgba(255, 255, 255, 0.45) 0%,
+      rgba(255, 255, 255, 0.08) 40%
+    ),
+    var(--pleasant-bg);
+  background-blend-mode: overlay;
+}
+
+/* button style */
+.btn-pleasant {
+  background: var(--gradient-hero);
+  color: white;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  box-shadow: var(--shadow-soft);
+}
+.btn-pleasant:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-medium);
+}
+
+/* card soft look */
+.card-pleasant {
+  background: var(--gradient-card);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-medium);
+}
+
+/* subtle footer warm tone */
+.footer-pleasant {
+  background: linear-gradient(180deg, hsl(150 40% 95%), hsl(45 25% 96%));
+}
+
+/* call-to-action hero */
+.hero-pleasant {
+  background: var(--gradient-hero);
+  color: var(--primary-foreground);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: var(--shadow-glow);
+}

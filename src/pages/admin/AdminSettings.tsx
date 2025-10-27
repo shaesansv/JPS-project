@@ -1,9 +1,14 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import AdminNav from "@/components/admin/AdminNav";
 import { api } from "@/services/api";
 import { useToast } from "@/hooks/use-toast";
@@ -12,10 +17,7 @@ import { Loader2 } from "lucide-react";
 const AdminSettings = () => {
   const [settings, setSettings] = useState({
     siteTitle: "",
-    primaryColor: "#3b82f6",
-    accentColor: "#f59e0b",
-    navbarAnimation: true,
-    navbarStyle: "slide",
+    // theme and navbar settings removed per request
     footerColor: "#1e293b",
     contactPhone: "",
     contactEmail: "",
@@ -80,7 +82,9 @@ const AdminSettings = () => {
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Site Settings</h1>
-          <p className="text-muted-foreground">Configure your website appearance and integrations</p>
+          <p className="text-muted-foreground">
+            Configure your website appearance and integrations
+          </p>
         </div>
 
         <div className="space-y-6">
@@ -96,117 +100,23 @@ const AdminSettings = () => {
                 <Input
                   id="siteTitle"
                   value={settings.siteTitle}
-                  onChange={(e) => setSettings({ ...settings, siteTitle: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, siteTitle: e.target.value })
+                  }
                   placeholder="Elite Estates"
                 />
               </div>
             </CardContent>
           </Card>
-
-          {/* Theme Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Theme & Colors</CardTitle>
-              <CardDescription>Customize your site's appearance</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="primaryColor">Primary Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="primaryColor"
-                      type="color"
-                      value={settings.primaryColor}
-                      onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-                      className="w-20 h-10"
-                    />
-                    <Input
-                      value={settings.primaryColor}
-                      onChange={(e) => setSettings({ ...settings, primaryColor: e.target.value })}
-                      placeholder="#3b82f6"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="accentColor">Accent Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="accentColor"
-                      type="color"
-                      value={settings.accentColor}
-                      onChange={(e) => setSettings({ ...settings, accentColor: e.target.value })}
-                      className="w-20 h-10"
-                    />
-                    <Input
-                      value={settings.accentColor}
-                      onChange={(e) => setSettings({ ...settings, accentColor: e.target.value })}
-                      placeholder="#f59e0b"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <Label htmlFor="footerColor">Footer Color</Label>
-                  <div className="flex gap-2">
-                    <Input
-                      id="footerColor"
-                      type="color"
-                      value={settings.footerColor}
-                      onChange={(e) => setSettings({ ...settings, footerColor: e.target.value })}
-                      className="w-20 h-10"
-                    />
-                    <Input
-                      value={settings.footerColor}
-                      onChange={(e) => setSettings({ ...settings, footerColor: e.target.value })}
-                      placeholder="#1e293b"
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Navbar Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Navbar Settings</CardTitle>
-              <CardDescription>Navigation bar animation and style</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="navbarAnimation">Enable Navbar Animation</Label>
-                  <p className="text-sm text-muted-foreground">Animated underline on hover</p>
-                </div>
-                <Switch
-                  id="navbarAnimation"
-                  checked={settings.navbarAnimation}
-                  onCheckedChange={(checked) =>
-                    setSettings({ ...settings, navbarAnimation: checked })
-                  }
-                />
-              </div>
-              <div>
-                <Label htmlFor="navbarStyle">Animation Style</Label>
-                <select
-                  id="navbarStyle"
-                  value={settings.navbarStyle}
-                  onChange={(e) => setSettings({ ...settings, navbarStyle: e.target.value })}
-                  className="w-full p-2 border rounded-md bg-background"
-                >
-                  <option value="slide">Slide</option>
-                  <option value="fade">Fade</option>
-                  <option value="scale">Scale</option>
-                </select>
-              </div>
-            </CardContent>
-          </Card>
+          {/* Theme & Navbar settings removed */}
 
           {/* Contact Settings */}
           <Card>
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
-              <CardDescription>Phone and email for customer contact</CardDescription>
+              <CardDescription>
+                Phone and email for customer contact
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -214,7 +124,9 @@ const AdminSettings = () => {
                 <Input
                   id="contactPhone"
                   value={settings.contactPhone}
-                  onChange={(e) => setSettings({ ...settings, contactPhone: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, contactPhone: e.target.value })
+                  }
                   placeholder="+1 (555) 123-4567"
                 />
               </div>
@@ -224,7 +136,9 @@ const AdminSettings = () => {
                   id="contactEmail"
                   type="email"
                   value={settings.contactEmail}
-                  onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
+                  onChange={(e) =>
+                    setSettings({ ...settings, contactEmail: e.target.value })
+                  }
                   placeholder="contact@eliteestates.com"
                 />
               </div>
@@ -235,7 +149,9 @@ const AdminSettings = () => {
           <Card>
             <CardHeader>
               <CardTitle>Social Media Links</CardTitle>
-              <CardDescription>Connect your social media profiles</CardDescription>
+              <CardDescription>
+                Connect your social media profiles
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -246,7 +162,10 @@ const AdminSettings = () => {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      socialLinks: { ...settings.socialLinks, facebook: e.target.value },
+                      socialLinks: {
+                        ...settings.socialLinks,
+                        facebook: e.target.value,
+                      },
                     })
                   }
                   placeholder="https://facebook.com/yourpage"
@@ -260,7 +179,10 @@ const AdminSettings = () => {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      socialLinks: { ...settings.socialLinks, instagram: e.target.value },
+                      socialLinks: {
+                        ...settings.socialLinks,
+                        instagram: e.target.value,
+                      },
                     })
                   }
                   placeholder="https://instagram.com/yourpage"
@@ -274,7 +196,10 @@ const AdminSettings = () => {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      socialLinks: { ...settings.socialLinks, youtube: e.target.value },
+                      socialLinks: {
+                        ...settings.socialLinks,
+                        youtube: e.target.value,
+                      },
                     })
                   }
                   placeholder="https://youtube.com/yourchannel"
@@ -287,7 +212,9 @@ const AdminSettings = () => {
           <Card>
             <CardHeader>
               <CardTitle>WhatsApp Integration</CardTitle>
-              <CardDescription>Configure WhatsApp notifications for enquiries</CardDescription>
+              <CardDescription>
+                Configure WhatsApp notifications for enquiries
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -305,7 +232,9 @@ const AdminSettings = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="whatsappApiKey">WhatsApp API Key (optional)</Label>
+                <Label htmlFor="whatsappApiKey">
+                  WhatsApp API Key (optional)
+                </Label>
                 <Input
                   id="whatsappApiKey"
                   type="password"
@@ -313,7 +242,10 @@ const AdminSettings = () => {
                   onChange={(e) =>
                     setSettings({
                       ...settings,
-                      whatsapp: { ...settings.whatsapp, apiKey: e.target.value },
+                      whatsapp: {
+                        ...settings.whatsapp,
+                        apiKey: e.target.value,
+                      },
                     })
                   }
                   placeholder="Enter API key for automated messages"
