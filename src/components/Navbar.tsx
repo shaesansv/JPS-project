@@ -27,7 +27,7 @@ const Navbar = () => {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-smooth ${
         isScrolled
-          ? "bg-background/96 backdrop-blur-lg shadow-soft border-b border-border"
+          ? "bg-primary/95 backdrop-blur-md shadow-strong border-b border-border"
           : "bg-background/80 backdrop-blur-sm"
       }`}
     >
@@ -39,10 +39,18 @@ const Navbar = () => {
               <Building2 className="h-6 w-6 text-primary" />
             </div>
             <div>
-              <span className="text-xl md:text-2xl font-extrabold text-foreground transition-smooth">
+              <span
+                className={`text-xl md:text-2xl font-extrabold transition-smooth ${
+                  isScrolled ? "text-white" : "text-foreground"
+                }`}
+              >
                 JP & Siva
               </span>
-              <div className="text-xs text-muted-foreground">
+              <div
+                className={`text-xs ${
+                  isScrolled ? "text-white/80" : "text-muted-foreground"
+                }`}
+              >
                 Premium Properties
               </div>
             </div>
@@ -74,7 +82,9 @@ const Navbar = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className={`md:hidden ${
+              isScrolled ? "text-white hover:text-white/80" : ""
+            }`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
@@ -98,7 +108,11 @@ const Navbar = () => {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-smooth hover-lift ${
                       location.pathname === link.path
-                        ? "bg-primary/10 text-primary shadow-soft"
+                        ? isScrolled
+                          ? "bg-white/10 text-white shadow-soft"
+                          : "bg-primary/10 text-primary shadow-soft"
+                        : isScrolled
+                        ? "text-white/90 hover:bg-white/10"
                         : "text-foreground/80 hover:bg-muted"
                     }`}
                     style={{ animationDelay: `${index * 0.1}s` }}

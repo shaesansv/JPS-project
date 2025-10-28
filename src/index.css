@@ -8,25 +8,27 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 45 30% 97%;
-    --foreground: 25 20% 15%;
+    /* Primary brand color: #461220 -> hsl(344 31% 17%) */
+    /* Light background with subtle warm undertone */
+    --background: 344 30% 98%; /* very light warm white */
+    --foreground: 344 31% 17%; /* dark text for contrast */
 
     --card: 0 0% 100%;
-    --card-foreground: 25 20% 15%;
+    --card-foreground: 345 20% 12%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 25 20% 15%;
 
-    --primary: 150 40% 45%;
+    --primary: 344 31% 17%; /* deep maroon */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 45 25% 92%;
-    --secondary-foreground: 25 20% 15%;
+    --secondary: 345 45% 40%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 45 20% 90%;
-    --muted-foreground: 25 15% 40%;
+    --muted: 345 30% 96%;
+    --muted-foreground: 345 20% 30%;
 
-    --accent: 25 85% 55%;
+    --accent: 344 60% 30%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 70% 50%;
@@ -34,41 +36,41 @@ All colors MUST be HSL.
 
     --border: 45 20% 85%;
     --input: 45 20% 85%;
-    --ring: 150 40% 45%;
+    --ring: 344 45% 30%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 25 20% 15%;
-    --sidebar-foreground: 45 30% 97%;
-    --sidebar-primary: 150 40% 45%;
+    --sidebar-background: 344 18% 12%;
+    --sidebar-foreground: 345 95% 98%;
+    --sidebar-primary: 344 31% 17%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 25 15% 25%;
-    --sidebar-accent-foreground: 45 30% 97%;
-    --sidebar-border: 25 15% 25%;
-    --sidebar-ring: 150 40% 45%;
+    --sidebar-accent: 344 20% 10%;
+    --sidebar-accent-foreground: 345 95% 98%;
+    --sidebar-border: 344 18% 14%;
+    --sidebar-ring: 344 45% 30%;
 
     /* Pleasant Land Theme Gradients */
     --gradient-hero: linear-gradient(
       135deg,
-      hsl(150 40% 45%) 0%,
-      hsl(160 45% 40%) 100%
+      hsl(344 34% 19%) 0%,
+      hsl(344 46% 28%) 100%
     );
     --gradient-card: linear-gradient(
       180deg,
       hsl(0 0% 100%) 0%,
-      hsl(45 25% 96%) 100%
+      hsl(345 30% 98%) 100%
     );
     --gradient-overlay: linear-gradient(
       180deg,
-      hsl(25 20% 15% / 0.65) 0%,
-      hsl(25 20% 15% / 0.35) 100%
+      hsl(344 20% 12% / 0.75) 0%,
+      hsl(344 20% 12% / 0.35) 100%
     );
 
     /* Soft Shadows */
-    --shadow-soft: 0 2px 12px hsl(150 40% 45% / 0.08);
-    --shadow-medium: 0 4px 20px hsl(150 40% 45% / 0.12);
-    --shadow-strong: 0 8px 32px hsl(150 40% 45% / 0.16);
-    --shadow-glow: 0 0 45px hsl(150 40% 45% / 0.25);
+    --shadow-soft: 0 2px 12px hsl(344 31% 17% / 0.06);
+    --shadow-medium: 0 4px 20px hsl(344 31% 17% / 0.09);
+    --shadow-strong: 0 8px 32px hsl(344 31% 17% / 0.12);
+    --shadow-glow: 0 0 45px hsl(344 31% 17% / 0.18);
 
     /* Smooth Animations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);

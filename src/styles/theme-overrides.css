@@ -1,9 +1,10 @@
 /* Small theme overrides for a pleasant user-facing theme */
 :root {
+  /* Pleasant maroon-based backdrop */
   --pleasant-bg: linear-gradient(
     180deg,
-    rgba(245, 248, 255, 0.6),
-    rgba(240, 249, 245, 0.6)
+    rgba(70, 18, 32, 0.06),
+    rgba(70, 18, 32, 0.02)
   );
 }
 
@@ -19,8 +20,8 @@
 
 /* button style */
 .btn-pleasant {
-  background: var(--gradient-hero);
-  color: white;
+  background: linear-gradient(90deg, hsl(344 46% 28%), hsl(344 34% 19%));
+  color: var(--primary-foreground);
   border-radius: 9999px;
   padding: 0.5rem 1rem;
   box-shadow: var(--shadow-soft);
@@ -32,19 +33,20 @@
 
 /* card soft look */
 .card-pleasant {
-  background: var(--gradient-card);
+  background: linear-gradient(180deg, hsl(0 0% 100%), hsl(345 30% 98%));
   border-radius: 1rem;
   box-shadow: var(--shadow-medium);
 }
 
-/* subtle footer warm tone */
+/* footer maroon tone */
 .footer-pleasant {
-  background: linear-gradient(180deg, hsl(150 40% 95%), hsl(45 25% 96%));
+  background: linear-gradient(180deg, hsl(344 46% 28%), hsl(344 34% 19%));
+  color: var(--primary-foreground);
 }
 
 /* call-to-action hero */
 .hero-pleasant {
-  background: var(--gradient-hero);
+  background: linear-gradient(90deg, hsl(344 46% 28%), hsl(344 34% 19%));
   color: var(--primary-foreground);
   border-radius: 1rem;
   padding: 2rem;
