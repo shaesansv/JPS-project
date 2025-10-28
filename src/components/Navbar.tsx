@@ -62,17 +62,28 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative text-sm font-medium transition-smooth hover:text-primary after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:bg-primary after:transition-transform hover:after:scale-x-100 ${
+                className={`relative text-sm font-medium transition-smooth after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:origin-left after:scale-x-0 after:transition-transform hover:after:scale-x-100 ${
                   location.pathname === link.path
-                    ? "text-primary after:scale-x-100"
-                    : "text-foreground/80"
+                    ? isScrolled
+                      ? "text-white after:bg-white after:scale-x-100"
+                      : "text-primary after:bg-primary after:scale-x-100"
+                    : isScrolled
+                    ? "text-white/90 hover:text-white after:bg-white"
+                    : "text-foreground/80 hover:text-primary after:bg-primary"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
             <Link to="/admin">
-              <Button size="sm" className="btn-pleasant">
+              <Button
+                size="sm"
+                className={`${
+                  isScrolled
+                    ? "bg-white text-primary hover:bg-white/90"
+                    : "btn-pleasant"
+                } transition-smooth`}
+              >
                 Admin Login
               </Button>
             </Link>
