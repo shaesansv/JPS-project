@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Enquiry = require('../models/Enquiry');
 const authMiddleware = require('../middleware/auth');
+const { generateEnquiryPDF } = require('../utils/pdfGenerator');
+const whatsappAPI = require('../services/whatsappCloudAPI');
 
 // Get all enquiries (Admin only)
 router.get('/', authMiddleware, async (req, res) => {
@@ -41,8 +43,31 @@ router.post('/', async (req, res) => {
     await enquiry.save();
     await enquiry.populate('property', 'title slug price location');
 
-    // TODO: Send WhatsApp notification here
-    // TODO: Send email notification here
+    try {
+      // Generate PDF
+      const pdfPath = await generateEnquiryPDF(enquiry);
+
+      // Send WhatsApp message with PDF
+      const adminPhone = process.env.ADMIN_WHATSAPP_NUMBER;
+      if (!adminPhone) {
+        throw new Error('Admin WhatsApp number not configured');
+      }
+
+      const formattedPhone = whatsappAPI.formatPhoneNumber(adminPhone);
+      const caption = `New Property Enquiry\n\nFrom: ${enquiry.name}\nPhone: ${enquiry.phone}\nProperty: ${enquiry.property.title}`;
+      
+      // First send the PDF
+      await whatsappAPI.sendDocument(formattedPhone, pdfPath, 'Property Enquiry Details');
+      
+      // Then send a text message with quick details
+      await whatsappAPI.sendText(formattedPhone, caption);
+
+      // Clean up the PDF file
+      await fs.remove(pdfPath);
+    } catch (error) {
+      console.error('Error sending WhatsApp notification:', error);
+      // Don't throw error here, we still want to save the enquiry
+    }
     
     res.status(201).json({
       success: true,
